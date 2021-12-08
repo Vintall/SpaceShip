@@ -12,6 +12,6 @@ public class PlayerInput : MonoBehaviour
         main_engine_force_multiplier = Input.GetAxis("Vertical");
 
         GetComponent<Rocket>().MainEnginePower = main_engine_force_multiplier;
-
+        gameObject.transform.localEulerAngles = new Vector3(0, 0, transform.rotation.eulerAngles.z - rotation_force_multiplier / 5);
     }
 }

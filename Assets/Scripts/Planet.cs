@@ -2,31 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Planet : MonoBehaviour
+public class Planet : SpaceObject
 {
+    #region Variables
     //Planet default mass per sm^3 = 0.005 kg 
+    //List<Sattelite> sattelites;
     string planet_name;
-    float mass;
-    float rotation_speed;
-    float radius;
-    float star_mass;
-    Rigidbody2D rb;
-
-
-    public float Mass
-    {
-        get
-        {
-            return mass;
-        }
-    }
-    public Rigidbody2D Rb
-    {
-        get
-        {
-            return rb;
-        }
-    }
+    
+    #endregion
+    #region Properties
+    #endregion
 
     private void Awake()
     {
@@ -38,25 +23,32 @@ public class Planet : MonoBehaviour
     }
     public void FixedUpdate()
     {
-        
+        Rocket rocket = GameController.Instance.Player.gameObject.GetComponent<Rocket>();
+        rocket.AddForce(gameObject.transform, Time.fixedDeltaTime);
     }
-
-    public void GeneratePlanet(string name, float star_mass, float rotation_speed, float radius)
+    public void GeneratePlanet(Vector3 pos, float mass, float rotation_speed, float radius, Vector3? start_velocity = null)
     {
-        planet_name = name;
+        if(start_velocity == null)
+            start_velocity = Vector3.zero;
 
-        this.star_mass = star_mass;
-        this.mass = star_mass;
-        rb.mass = mass;
+        transform.position = pos;
+        planet_name = GameController.Instance.NameGenerator.GenerateName;
+        Rb.mass = mass;
+        Rb.velocity = (Vector2)start_velocity;
 
-        this.radius = radius;
-        this.rotation_speed = rotation_speed;
-        Debug.Log("Planet " + name + " was generated");
+        Debug.Log("Planet " + planet_name + " was generated");
+
+        //Replace to MeshGenerating
         GameObject model = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         model.transform.parent = this.transform;
         model.transform.localPosition = Vector3.zero;
+        model.transform.localScale = new Vector3((float)radius, (float)radius, (float)radius);
+        //End of replacind
 
-        rb.velocity = new Vector3(0, 1, 0).normalized * Mathf.Sqrt(mass / radius);
+
+
+        Rocket rocket = GameController.Instance.Player.GetComponent<Rocket>();
+        rocket.transform.position = new Vector3(transform.position.x - radius, transform.position.y, transform.position.z);
+        rocket.Rb.velocity = new Vector3(0, 1, 0).normalized * Mathf.Sqrt(rocket.Rb.mass / (rocket.transform.position - transform.position).magnitude);
     }
-
 }

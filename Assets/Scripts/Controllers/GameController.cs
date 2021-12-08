@@ -6,11 +6,14 @@ public class GameController : MonoBehaviour
 {
     #region SelializeFields
     [SerializeField] GameObject star_system_prefab;
+    [SerializeField] PlanetNameGenerator name_generator;
     #endregion
     #region Variables
     bool is_star_system_done = false;
     static GameController instance;
     Transform star_system;
+    [SerializeField] Transform player;  //Remove SerializeField
+    
     #endregion
     #region Properties
     public static GameController Instance
@@ -25,6 +28,20 @@ public class GameController : MonoBehaviour
         get
         {
             return star_system;
+        }
+    }
+    public Transform Player
+    {
+        get
+        {
+            return player;
+        }
+    }
+    public PlanetNameGenerator NameGenerator
+    {
+        get
+        {
+            return name_generator;
         }
     }
     #endregion

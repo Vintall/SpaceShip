@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rocket : MonoBehaviour
+public class Rocket : SpaceObject
 {
     [SerializeField] RocketBody body;
-    Rigidbody2D rb;
     float main_engine_power = 0;
 
     public float MainEnginePower
@@ -25,7 +24,7 @@ public class Rocket : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.AddForceAtPosition(body.Engine.transform.forward * main_engine_power * body.Engine.engine_force / Time.fixedDeltaTime, body.Engine.transform.position, ForceMode2D.Impulse);
+        rb.AddForceAtPosition(body.Engine.transform.forward * main_engine_power * body.Engine.engine_force * Time.fixedDeltaTime, body.Engine.transform.position, ForceMode2D.Impulse);
     }
 
     private void Awake()
