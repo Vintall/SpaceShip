@@ -14,6 +14,7 @@ public class StarSystem : MonoBehaviour
 
     private void Awake()
     {
+
     }
     void PlanetOrbitalMovement()
     {
@@ -39,19 +40,45 @@ public class StarSystem : MonoBehaviour
         PlanetOrbitalMovement();
         RocketOrbitalMovement();
     }
-    public void GenerateStarSystem(float star_mass, int count_of_planet)
+    Structs.OrbitEllipse orbitEllipse  = null;
+    public void GenerateStarSystem(string star_mass_string, int count_of_planet)
     {
+        System.Numerics.BigInteger star_mass = System.Numerics.BigInteger.Parse("1988500000000000000000000000000"); //кг
+        System.Numerics.BigInteger planet_mass = System.Numerics.BigInteger.Parse("5972370000000000000000000"); //кг
+        System.Numerics.BigInteger distance = System.Numerics.BigInteger.Parse("150000000000"); //метров
+
+
+        //System.Numerics.BigInteger star_mass = System.Numerics.BigInteger.Parse(  "198850000000000000"); //кг
+        //System.Numerics.BigInteger planet_mass = System.Numerics.BigInteger.Parse("5972370000000"); //кг
+        //System.Numerics.BigInteger distance = System.Numerics.BigInteger.Parse("1500"); //метров
+
+        //System.Numerics.BigInteger star_mass = System.Numerics.BigInteger.Parse("597237500000000"); //кг
+        //System.Numerics.BigInteger planet_mass = System.Numerics.BigInteger.Parse("597237500000000"); //кг
+        //System.Numerics.BigInteger distance = System.Numerics.BigInteger.Parse("1500"); //метров
+
         //float[] radiuses = new float[1];
-        
+
         //radiuses[0] = Mathf.Sqrt(star_mass / (4 * Mathf.PI));
 
-        Planet planet = Instantiate(planet_prefab, transform).GetComponent<Planet>();
-        planet.GeneratePlanet(new Vector3(0, 0, 0),
-                              2808116000000000, Random.Range(-30f, 30f),
-                              6370);
+        //Planet planet = Instantiate(planet_prefab, transform).GetComponent<Planet>();
+        //planet.GeneratePlanet(new Vector3(0, 0, 0),
+        //                      2808116000000000, Random.Range(-30f, 30f),
+        //                      6370);
+        orbitEllipse = new Structs.OrbitEllipse();
+        //planets.Add(planet.transform);
+        orbitEllipse.CalculateOrbit(star_mass,
+                                    planet_mass,
+                                    new Structs.OrbitalVector2(0, 0),
+                                    new Structs.OrbitalVector2(-distance, 0),
+                                    new Structs.OrbitalVector2(0, System.Numerics.BigInteger.Parse("100000000")));
 
-        planets.Add(planet.transform);
-        
+
+        System.Numerics.BigInteger buff = orbitEllipse.Points[0].magnitude;
+        for (int i = 0; i < orbitEllipse.Points.Count; i++)
+        {
+            orbitEllipse.Points[i] = new Structs.OrbitalVector2(orbitEllipse.Points[i].x * 50 / buff, orbitEllipse.Points[i].y * 50 / buff);
+        }
+
         //float[] radiuses = new float[count_of_planet];
         //float[] orbit_radiuses = new float[count_of_planet];
 
@@ -59,7 +86,7 @@ public class StarSystem : MonoBehaviour
         //float star_radius = Mathf.Sqrt(star_mass / (4 * Mathf.PI));
 
         //star_obj.GenerateStar(star_mass, 0f, star_radius);
-        //star = star_obj.transform;
+        //stars.Add(star_obj.transform);
 
 
         //for (int i = 0; i < count_of_planet; i++)
@@ -77,10 +104,21 @@ public class StarSystem : MonoBehaviour
         //    Planet planet = Instantiate(planet_prefab, transform).GetComponent<Planet>();
         //    planet.GeneratePlanet(new Vector3(orbit_radiuses[i], 0, 0),
         //                          star_mass * 0.1f, Random.Range(-30f, 30f),
-        //                          radiuses[i], 
+        //                          radiuses[i],
         //                          new Vector3(0, 1, 0).normalized * Mathf.Sqrt(star_mass * 0.1f / orbit_radiuses[i]));
 
         //    planets.Add(planet.transform);
         //}
+    }
+    private void OnDrawGizmos()
+    {
+        if(orbitEllipse != null)
+        {
+            Gizmos.color = Color.red;
+            for(int i = 0; i< orbitEllipse.Points.Count; i++)
+            {
+                Gizmos.DrawSphere(new Vector3(float.Parse(orbitEllipse.Points[i].x.ToString()), float.Parse(orbitEllipse.Points[i].y.ToString()), 0), 5);
+            }
+        }
     }
 }

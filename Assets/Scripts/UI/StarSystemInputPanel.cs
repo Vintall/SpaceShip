@@ -11,7 +11,7 @@ public class StarSystemInputPanel : MonoBehaviour
     #endregion
     #region Variables
     int planets_count;
-    float star_mass;
+    string star_mass;
     #endregion
     #region Properties
     public int PlanetsCount
@@ -21,7 +21,7 @@ public class StarSystemInputPanel : MonoBehaviour
             return planets_count;
         }
     }
-    public float StarMass
+    public string StarMass
     {
         get
         {
@@ -32,7 +32,7 @@ public class StarSystemInputPanel : MonoBehaviour
     #region Methods
     public void OnStarMassChanged()
     {
-        star_mass = float.Parse(star_mass_input.text);
+        star_mass = star_mass_input.text;
     }
     public void OnPlanetsCountChanged()
     {

@@ -23,7 +23,7 @@ public class CreateStarSystemPanel : MonoBehaviour
             return preview_panel;
         }
     }
-    public float GetStarMass
+    public string GetStarMass
     {
         get
         {
